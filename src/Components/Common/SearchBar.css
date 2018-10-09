@@ -1,0 +1,10 @@
+li.active, mark, a.dropdown.active {
+    padding: 0;
+    background-color: #007bff;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.navigation-clean-button.navbar-light .navbar-nav a.active {
+    color: #ffffff;
+}
