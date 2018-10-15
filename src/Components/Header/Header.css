@@ -1,0 +1,7 @@
+#header-title, #login {
+  padding-left: 40px;
+}
+
+#header-title, #login, #signup {
+  color: #2B92C6;
+}

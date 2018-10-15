@@ -1,0 +1,46 @@
+#refillLog {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  font-size: 0.85em;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#refillLog.container {
+  padding: 0px;
+  display: block;
+  margin-left: 0px;
+  margin-right: auto;
+  border: 1px solid rgb(187, 187, 187);
+  width: 242px;
+}
+
+#refillLog thead tr {
+  display: block
+}
+
+#refillLog tbody {
+  display: block;
+  overflow: auto;
+  height: 110px;
+}
+
+#refillLog td, #refillLog th {
+  border: 1px solid #ddd;
+  padding: 2px 11px;
+}
+
+#refillLog tr:nth-child(even){background-color: #f2f2f2;}
+
+#refillLog tr:hover {background-color: #ddd;}
+
+#refillLog th {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+
+#refillLog .qty {
+  text-align: center;
+}

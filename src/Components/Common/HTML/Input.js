@@ -1,21 +1,27 @@
 import React from 'react'
 
+function _handleFocus(e) {
+  e.target.select()
+}
+
+
 const Input = props => {
 
   return (
     <div className={props.parentClass +"-input"}>
       <label htmlFor={props.name}> 
-        {props.title}
+        {props.inputLabel}
       </label>
 
       <input
-        // className   ={props.parentClass + '-input'}
         id          ={props.parentClass + '-input-' + props.name}
         name        ={props.name}
         type        ={props.type}
-        value       ={props.value}
-        onChange    ={props.handleChange}
+        defaultValue={props.value}
         placeholder ={props.placeholder}
+        disabled    ={props.disabled}
+        onChange    ={props.handleChange}
+        onFocus     ={_handleFocus}
       />
     </div>
   )
