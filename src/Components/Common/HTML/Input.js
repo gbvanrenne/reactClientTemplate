@@ -18,6 +18,7 @@ const Input = props => {
         name        ={props.name}
         type        ={props.type}
         defaultValue={props.value}
+        value       ={props.value}
         placeholder ={props.placeholder}
         disabled    ={props.disabled}
         onChange    ={props.handleChange}
