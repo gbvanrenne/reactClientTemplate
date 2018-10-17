@@ -1,0 +1,15 @@
+.CustomerInfo-input input {
+  width: 275px;
+  border: 1px solid lightgrey;
+  padding: 4px;
+  color: blue;
+  font-weight: bold;
+  font-size: large;
+}
+
+.CustomerInfo-input label {
+  width: 150px;
+  font-weight: bold;
+  font-size: large;
+  /* padding-left: 20px; */
+}

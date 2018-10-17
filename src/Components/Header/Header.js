@@ -11,7 +11,7 @@ class Header extends Component {
         return (
 
         <header className="navbar navbar-expand flex-column flex-md-row navbar-light">
-            <a className="navbar-brand mr-0 mr-md-2" href="#">
+            <a className="navbar-brand mr-0 mr-md-2" href="/">
                 <img src="assets/img/waterBarLogo.jpg" id="logo" alt="The Water Bar logo"/>
             </a>
 

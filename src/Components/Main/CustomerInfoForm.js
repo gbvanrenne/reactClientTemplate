@@ -5,15 +5,11 @@ import Button from '../Common/HTML/Button'
 import propTypes from 'prop-types'
 import DB_User_UPDATE from '../../DBqueries/DB_User_UPDATE'
 
+import './CustomerInfoForm.css'
+
 class CustomerInfoForm extends Component {
   state = {
     checkboxOption: '',
-  }
-
-  componentWillMount() {
-    this.setState({
-      customer: this.props.customer,
-    })
   }
 
   render() {
@@ -38,7 +34,7 @@ class CustomerInfoForm extends Component {
             name          ={'firstName'} 
             value         ={this.props.customer.firstName}
             placeholder   ={'First name'}
-            handleChange  ={this._handleInput.bind(this)}
+            handleChange  ={this._handleInput}
           /> 
           
           {/* last name */}
@@ -175,6 +171,10 @@ class CustomerInfoForm extends Component {
   _handleInput = (e) => {
     let value = e.target.value;
     let name  = e.target.name;
+
+    // Changing the value of an input field should update the state
+    // of the corresponding field up in the Main component, and that 
+    // value should trickle back down here via props.
 
     this.setState( prevState => {
       return ({

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import {asyncContainer, Typeahead} from 'react-bootstrap-typeahead';
 import DB_Users_GET from '../../DBqueries/DB_Users_GET'
 import propTypes from 'prop-types'
+import mock_customer_data from '../../Test/mock_customer_data.js'
 
 import './SearchBar.css';
 
@@ -16,7 +17,7 @@ import './SearchBar.css';
 
 const AsyncTypeahead = asyncContainer(Typeahead);
 
-class SearchBar extends Component 
+class SearchBar extends Component
 {
     state = {
       disabled: false,
@@ -36,7 +37,7 @@ class SearchBar extends Component
   }
 
   _getContent = selected => {
-    this.props.setSelectedCustomer_callback(selected[0])
+    this.props.setCustomer_callback(selected[0])
     this._typeahead.getInstance().clear()
   }
 
@@ -51,18 +52,37 @@ class SearchBar extends Component
       this.setState({initialState: false})
     }
     
-    var userList = await DB_Users_GET(queryParams)
+    // var userList = await DB_Users_GET(queryParams)
+
 
     this.setState({
-      options: userList,
+      // options: userList,
+      options: mock_customer_data.sort(this._sortByName),
       isLoading: false,
     })
+  }
+
+  _sortByName = (a,b) => {
+    if (a.lastName < b.lastName)
+      return -1;
+
+    if (a.lastName > b.lastName)
+      return 1;
+
+    if (a.lastName === b.lastName) {
+      if (a.firstName < b.firstName)
+        return -1;
+
+      if (a.firstName > b.firstName)
+        return 1;
+    }
+      return 0;
   }
 
   render()
   {
     return (
-      <div>
+      <div className="search-bar">
       <code><ul>
         <li>use offline test data during dev to remove network / prisma dependency</li>
       </ul></code>
