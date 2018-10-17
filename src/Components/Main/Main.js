@@ -55,6 +55,9 @@ class Main extends Component {
           customer={this.state.customer}
         />
 
+        <code><ul>
+          <li>BUG: add credits, edit mode, manually change balance, exit edit mode, deduct</li>
+        </ul></code>
         <ProductRefill
           productType="18 Litre"
           readOnlyMode={this.state.readOnlyMode}

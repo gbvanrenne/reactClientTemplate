@@ -176,13 +176,11 @@ class CustomerInfoForm extends Component {
     // of the corresponding field up in the Main component, and that 
     // value should trickle back down here via props.
 
-    this.setState( prevState => {
-      return ({
-        customer: { 
-          ...prevState.customer,
-          [name]: value,
-        }
-      })
+    // when in read only mode, value should be set to props.value. But
+    // in edit mode, value should be set to state.value
+
+    this.setState({
+      [name]: value,
     })
   }
 
