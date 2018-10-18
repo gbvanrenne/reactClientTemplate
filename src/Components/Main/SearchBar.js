@@ -37,7 +37,7 @@ class SearchBar extends Component
   }
 
   _getContent = selected => {
-    this.props.setSelectedCustomer_callback(selected[0])
+    this.props.setCustomer_callback(selected[0])
     this._typeahead.getInstance().clear()
   }
 

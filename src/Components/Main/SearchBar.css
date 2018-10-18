@@ -7,7 +7,11 @@ li.active, mark, a.dropdown.active {
 
 .search-bar {
     width: 75%;
+<<<<<<< HEAD
     margin: 20px auto;
+=======
+    margin: 20px 20px 20px 0px;
+>>>>>>> cde520d23261a647ffc4b0ec8fd489c5714b6ac8
 }
 
 .navigation-clean-button.navbar-light .navbar-nav a.active {

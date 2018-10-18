@@ -172,13 +172,15 @@ class CustomerInfoForm extends Component {
     let value = e.target.value;
     let name  = e.target.name;
 
-    this.setState( prevState => {
-      return ({
-        customer: { 
-          ...prevState.customer,
-          [name]: value,
-        }
-      })
+    // Changing the value of an input field should update the state
+    // of the corresponding field up in the Main component, and that 
+    // value should trickle back down here via props.
+
+    // when in read only mode, value should be set to props.value. But
+    // in edit mode, value should be set to state.value
+
+    this.setState({
+      [name]: value,
     })
   }
 

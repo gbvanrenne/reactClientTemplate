@@ -9,7 +9,11 @@ const Input = (props) => {
       </label>
 
       <input
+<<<<<<< HEAD
         readOnly
+=======
+        readOnly    ={props.disabled}
+>>>>>>> cde520d23261a647ffc4b0ec8fd489c5714b6ac8
         id          ={props.parentClass + '-input-' + props.name}
         name        ={props.name}
         type        ={props.type}
