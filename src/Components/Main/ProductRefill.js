@@ -31,7 +31,7 @@ class ProductRefill extends Component {
     if (this.state.balance === 0 && this.state.actionOption === 'DEDUCT (-)') {
       this.setState( prevState => {
         return ({
-          ... prevState,
+          ...prevState,
           actionOptionsIndex: 1,
           actionOption: 'ADD (+)',
         })

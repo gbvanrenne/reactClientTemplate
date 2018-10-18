@@ -5,15 +5,11 @@ import Button from '../Common/HTML/Button'
 import propTypes from 'prop-types'
 import DB_User_UPDATE from '../../DBqueries/DB_User_UPDATE'
 
+import './CustomerInfoForm.css'
+
 class CustomerInfoForm extends Component {
   state = {
     checkboxOption: '',
-  }
-
-  componentWillMount() {
-    this.setState({
-      customer: this.props.customer,
-    })
   }
 
   render() {
@@ -38,7 +34,7 @@ class CustomerInfoForm extends Component {
             name          ={'firstName'} 
             value         ={this.props.customer.firstName}
             placeholder   ={'First name'}
-            handleChange  ={this._handleInput.bind(this)}
+            handleChange  ={this._handleInput}
           /> 
           
           {/* last name */}

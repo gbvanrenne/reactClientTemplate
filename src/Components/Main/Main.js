@@ -42,7 +42,7 @@ class Main extends Component {
           setSelectedCustomer_callback={this._setSelectedCustomer.bind(this)}
         />
         
-        <h2>Customer Info</h2>
+        {/* <h2>Customer Info</h2> */}
         
         <CustomerInfoForm
           readOnlyMode={this.state.readOnlyMode} 
@@ -50,9 +50,6 @@ class Main extends Component {
           customer={this.state.customer}
         />
 
-        <code><ul>
-          <li>BUG: add credits, edit mode, manually change balance, exit edit mode, deduct</li>
-        </ul></code>
         <ProductRefill
           productType="18 Litre"
           readOnlyMode={this.state.readOnlyMode}

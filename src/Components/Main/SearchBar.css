@@ -5,10 +5,9 @@ li.active, mark, a.dropdown.active {
     color: #ffffff;
 }
 
-SearchBar {
-    width: 66%;
-    margin-left: auto;
-    margin-right: auto;
+.search-bar {
+    width: 75%;
+    margin: 20px auto;
 }
 
 .navigation-clean-button.navbar-light .navbar-nav a.active {

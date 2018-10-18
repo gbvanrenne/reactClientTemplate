@@ -19,20 +19,16 @@ function DB_User_UPDATE (params) {
 
 const getUserListQuery = (queryParams) => {
   return (
-    `query {
-        getUsers ${queryParams}
-        {
-          id
-          firstName
-          lastName
-          address
-          city
-          province
-          postalCode
-          phone
-          email
-        }
+    `mutation {
+      updateUser (
+        where: {id: "cjmvf5gum001i0830vhcy2af6"}
+        data: {firstName: "Alice"} 
+      )
+      {
+        id 
+        firstName
       }
+    }
     `
   )
 }

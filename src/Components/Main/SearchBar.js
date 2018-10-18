@@ -52,7 +52,8 @@ class SearchBar extends Component
       this.setState({initialState: false})
     }
     
-    var userList = await DB_Users_GET(queryParams)
+    // var userList = await DB_Users_GET(queryParams)
+
 
     this.setState({
       // options: userList,
@@ -81,7 +82,7 @@ class SearchBar extends Component
   render()
   {
     return (
-      <div>
+      <div className="search-bar">
       <code><ul>
         <li>use offline test data during dev to remove network / prisma dependency</li>
       </ul></code>
