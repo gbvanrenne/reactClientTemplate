@@ -47,11 +47,6 @@ class Main extends Component {
           setCustomer_callback={this._setCustomer.bind(this)}
         />
         
-<<<<<<< HEAD
-        {/* <h2>Customer Info</h2> */}
-        
-=======
->>>>>>> cde520d23261a647ffc4b0ec8fd489c5714b6ac8
         <CustomerInfoForm
           readOnlyMode={this.state.readOnlyMode} 
           setROmode_callback={this._setROstate.bind(this)}

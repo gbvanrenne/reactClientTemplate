@@ -1,29 +1,56 @@
-import React from 'react'
+import React, {Component} from 'react'
 
-const Input = (props) => {
+class Input extends Component {
 
-  return (
-    <div className={props.parentClass +"-input"}>
-      <label htmlFor={props.name}> 
-        {props.title}
-      </label>
+  state = {
+    value: '',
+  }
 
-      <input
-<<<<<<< HEAD
-        readOnly
-=======
-        readOnly    ={props.disabled}
->>>>>>> cde520d23261a647ffc4b0ec8fd489c5714b6ac8
-        id          ={props.parentClass + '-input-' + props.name}
-        name        ={props.name}
-        type        ={props.type}
-        value       ={props.value || ''}
-        // placeholder ={props.placeholder}
-        // disabled    ={props.disabled}
-      />
+  componentDidUpdate() {
 
-    </div>
-  )
+    // When the component gets updated while it's in read-only mode, set the value
+    // in the state to the value passed from the parent component
+    if (this.props.disabled) {
+      if (this.state.value !== this.props.value) {
+        this.setState({
+          value: this.props.value
+        })
+      }
+    }
+  }
+
+  render() {
+
+    return (
+      <div className={this.props.parentClass +"-input"}>
+        <label htmlFor={this.props.name}> 
+          {this.props.title}
+        </label>
+
+        <input
+          id          ={this.props.parentClass + '-input-' + this.props.name}
+          name        ={this.props.name}
+          type        ={this.props.type}
+          value       ={this.state.value || ''}
+          disabled    ={this.props.disabled}
+          onChange    ={this._handleChange}
+          // placeholder ={this.props.placeholder}
+          />
+
+      </div>
+    )
+  }
+
+  _handleChange = (e) => {
+    let value = e.target.value;
+    let name  = e.target.name;
+
+    this.setState({
+      value: value,
+    })
+
+    this.props.handleChange_callback(e)
+  }
 }
 
 export default Input

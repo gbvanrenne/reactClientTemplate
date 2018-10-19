@@ -5,11 +5,13 @@ import Button from '../Common/HTML/Button'
 import propTypes from 'prop-types'
 import DB_User_UPDATE from '../../DBqueries/DB_User_UPDATE'
 
+import objIsEmpty from '../../Utils/objUtils' 
+
 import './CustomerInfoForm.css'
 
 class CustomerInfoForm extends Component {
   state = {
-    checkboxOption: '',
+    customerEdits: {},
   }
 
   render() {
@@ -34,7 +36,7 @@ class CustomerInfoForm extends Component {
             name          ={'firstName'} 
             value         ={this.props.customer.firstName}
             placeholder   ={'First name'}
-            handleChange  ={this._handleInput}
+            handleChange_callback  ={this._handleInput.bind(this)}
           /> 
           
           {/* last name */}
@@ -46,7 +48,7 @@ class CustomerInfoForm extends Component {
             name          ={'lastName'} 
             value         ={this.props.customer.lastName}
             placeholder   ={'Last name'}
-            handleChange  ={this._handleInput}
+            handleChange_callback  ={this._handleInput.bind(this)}
           />
 
           {/* address */}
@@ -58,7 +60,7 @@ class CustomerInfoForm extends Component {
             name          ={'address'} 
             value         ={this.props.customer.address}
             placeholder   ={'Address'}
-            handleChange  ={this._handleInput}
+            handleChange_callback  ={this._handleInput.bind(this)}
           />
 
           {/* city */}
@@ -70,7 +72,7 @@ class CustomerInfoForm extends Component {
             name          ={'city'} 
             value         ={this.props.customer.city}
             placeholder   ={'City'}
-            handleChange  ={this._handleInput}
+            handleChange_callback  ={this._handleInput.bind(this)}
           />
 
           {/* province */}
@@ -82,7 +84,7 @@ class CustomerInfoForm extends Component {
             name          ={'province'} 
             value         ={this.props.customer.province}
             placeholder   ={'Province'}
-            handleChange  ={this._handleInput}
+            handleChange_callback  ={this._handleInput.bind(this)}
           />
 
           {/* postal code */}
@@ -94,7 +96,7 @@ class CustomerInfoForm extends Component {
             name          ={'postalCode'} 
             value         ={this.props.customer.postalCode}
             placeholder   ={'Postal Code'}
-            handleChange  ={this._handleInput}
+            handleChange_callback  ={this._handleInput.bind(this)}
           />
 
           {/* phone */}
@@ -106,7 +108,7 @@ class CustomerInfoForm extends Component {
             name          ={'phone'} 
             value         ={this.props.customer.phone}
             placeholder   ={'Phone'}
-            handleChange  ={this._handleInput}
+            handleChange_callback  ={this._handleInput.bind(this)}
           />
 
          {/* email */}
@@ -118,7 +120,7 @@ class CustomerInfoForm extends Component {
             name          ={'email'} 
             value         ={this.props.customer.email}
             placeholder   ={'Email'}
-            handleChange  ={this._handleInput}
+            handleChange_callback  ={this._handleInput.bind(this)}
           />
 
           {/* new customer button*/}
@@ -130,13 +132,17 @@ class CustomerInfoForm extends Component {
           />
 
           {/* edit customer button*/}
+          {/* Show the edit button either in read only mode or in edit mode when no changes
+          have yet been made to the record */}
+          { (this.props.readOnlyMode === true || 
+            (this.props.readOnlyMode === false && ! this._recordHasUnsavedEdits())) &&
           <Button 
             parentClass   ={'CustomerInfo'}
             name          ={'editCustomer'}
             title         ={'Edit'}
             action        ={this._handleButtonEvent}
           />
-
+          }
           {/* delete customer button*/}
           <Button 
             parentClass   ={'CustomerInfo'}
@@ -180,8 +186,14 @@ class CustomerInfoForm extends Component {
     // in edit mode, value should be set to state.value
 
     this.setState({
-      [name]: value,
+      customerEdits: {
+        [name]: value,
+      }
     })
+  }
+
+  _recordHasUnsavedEdits = () => {
+    return (! objIsEmpty(this.state.customerEdits))
   }
 
   _handleButtonEvent = (e) => {
@@ -194,6 +206,7 @@ class CustomerInfoForm extends Component {
         break;
 
       case 'editCustomer':
+
         if(this.props.customer.id) {
           this.props.setROmode_callback(! this.props.readOnlyMode)
         }
@@ -210,6 +223,13 @@ class CustomerInfoForm extends Component {
         break;
 
       case 'cancelChanges':
+        // reset customer edit state variable to an empty object
+        this.setState({
+          customerEdits: {}
+        })
+
+        // set RO mode to true
+        this.props.setROmode_callback( true )
         break;
 
       default:

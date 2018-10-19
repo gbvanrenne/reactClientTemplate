@@ -65,7 +65,7 @@ class ProductRefill extends Component {
             inputLabel    ={'Balance'} 
             name          ={'balance'} 
             value         ={this.state.balance}
-            handleChange  ={this._handleNumberInput}
+            handleChange_callback  ={this._handleNumberInput.bind(this)}
           /> 
 
           <code><ul>
@@ -86,7 +86,7 @@ class ProductRefill extends Component {
             inputLabel    ={'Refill Qty'} 
             name          ={'refillQty'} 
             value         ={this.state.refillQty}
-            handleChange  ={this._handleNumberInput}
+            handleChange_callback  ={this._handleNumberInput.bind(this)}
           />
 
           {/* apply / submit button */}
