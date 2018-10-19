@@ -131,18 +131,6 @@ class CustomerInfoForm extends Component {
             action        ={this._handleButtonEvent}
           />
 
-          {/* edit customer button*/}
-          {/* Show the edit button either in read only mode or in edit mode when no changes
-          have yet been made to the record */}
-          { (this.props.readOnlyMode === true || 
-            (this.props.readOnlyMode === false && ! this._recordHasUnsavedEdits())) &&
-          <Button 
-            parentClass   ={'CustomerInfo'}
-            name          ={'editCustomer'}
-            title         ={'Edit'}
-            action        ={this._handleButtonEvent}
-          />
-          }
           {/* delete customer button*/}
           <Button 
             parentClass   ={'CustomerInfo'}
@@ -151,21 +139,36 @@ class CustomerInfoForm extends Component {
             action        ={this._handleButtonEvent}
           />
 
+          {/* edit customer button*/}
+          {/* Show the edit button in read only mode when a user has been selected */}
+          { this.props.readOnlyMode === true && this.props.customer.id !== "" &&
+          <Button 
+            parentClass   ={'CustomerInfo'}
+            name          ={'editCustomer'}
+            title         ={'Edit'}
+            action        ={this._handleButtonEvent}
+          />
+          }
+
           {/* save changes button*/}
+          { (this.props.readOnlyMode === false && this._recordHasUnsavedEdits()) &&
           <Button 
             parentClass   ={'CustomerInfo'}
             name          ={'saveChanges'}
             title         ={'Save Changes'}
             action        ={this._handleButtonEvent}
           />
+          }
 
-          {/* cancel changes button*/}
+          { (this.props.readOnlyMode === false && this._recordHasUnsavedEdits()) &&
+            /* cancel changes button*/
           <Button 
             parentClass   ={'CustomerInfo'}
             name          ={'cancelChanges'}
             title         ={'Cancel Changes'}
             action        ={this._handleButtonEvent}
           />
+          }
           
           <p></p>
           

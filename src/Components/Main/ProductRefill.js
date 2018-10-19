@@ -70,6 +70,8 @@ class ProductRefill extends Component {
 
           <code><ul>
             <li>disable refillQty if customer isn't selected or edit mode is enabled</li>  
+            <li>Changing the balance in edit mode should trigger enabling of save / cancel</li>  
+            <li>After adding or deducting credits, refill qty field should be set to 0</li>  
           </ul></code>
 
           {/* deduct / add quantity */}
@@ -112,7 +114,7 @@ class ProductRefill extends Component {
   _handleNumberInput = (e) => {
     var value = e.target.value;
     var name  = e.target.name;
-    
+
     value = (value === '') ? '' : parseInt(value)
 
     this.setState({
@@ -168,6 +170,7 @@ class ProductRefill extends Component {
         // Adjust the new balance up or down based on the specified refill qty
         // If deducting credits, disallow operation if it would result in less
         // than 0 credits left on the account.
+
         if (newBalance >= 0) {
           this.setState({
             refillQty: 0,
