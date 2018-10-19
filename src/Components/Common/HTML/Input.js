@@ -12,12 +12,6 @@ class Input extends Component {
 
     if (this.props.disabled || this.props.name === 'refillQty') {
 
-      if (this.props.parentClass == 'ProductRefill' && ! this.props.disabled) {
-        console.log("disabled: ", this.props.disabled)
-        console.log("value (props): ", this.props.value)
-        console.log("value (state): ", this.state.value)
-      }
-
       if (this.state.value !== this.props.value) {
         this.setState({
           value: this.props.value
