@@ -18,15 +18,18 @@ class ProductRefill extends Component {
   }
 
   componentWillMount = () => {
+
     if (this.state.balance === 0) {
       this.setState({
         actionOptionsIndex: 1,
         actionOption: 'ADD (+)'
       })
     }
+
+    this.setState({ balance: this.props.balance })
   }
     
-  componentWillUpdate = () => {
+  componentDidUpdate = () => {
 
     if (this.state.balance === 0 && this.state.actionOption === 'DEDUCT (-)') {
       this.setState( prevState => {
@@ -49,7 +52,7 @@ class ProductRefill extends Component {
 
           {/* deduct / add state button */}
           <Button 
-            disabled      ={! this.props.readOnlyMode}
+            disabled      ={this.props.readOnlyMode}
             parentClass   ={'ProductRefill'}
             name          ={'refillType'}
             title         ={this.state.actionOption}
@@ -64,6 +67,7 @@ class ProductRefill extends Component {
             title         ={'Balance'} 
             inputLabel    ={'Balance'} 
             name          ={'balance'} 
+            balanceType   ={this.props.balanceName} 
             value         ={this.state.balance}
             handleChange_callback  ={this._handleNumberInput.bind(this)}
           /> 
@@ -138,6 +142,8 @@ class ProductRefill extends Component {
     switch (e.target.name) {
 
       case 'refillType':
+
+        if (! this.props.readOnlyMode) break; 
 
         var optionIndex
 

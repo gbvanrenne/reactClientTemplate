@@ -7,8 +7,8 @@ class Input extends Component {
   }
 
   componentDidUpdate() {
-    // When the component gets updated while it's in read-only mode, set the value
-    // in the state to the value passed from the parent component
+    // use the props value when in read-only mode or when updating refill qty which 
+    // is enabled in read-only mode
 
     if (this.props.disabled || this.props.name === 'refillQty') {
 
@@ -32,12 +32,24 @@ class Input extends Component {
           id          ={this.props.parentClass + '-input-' + this.props.name}
           name        ={this.props.name}
           type        ={this.props.type}
-          value       ={this.state.value || ''}
+          value       ={this.state.value || ""}
           disabled    ={this.props.disabled}
           onChange    ={this._handleChange}
           autoComplete={'off'}
           // placeholder ={this.props.placeholder}
           />
+
+          {(this.state.value !== this.props.value) &&
+            <span style={{
+                paddingLeft: '10px',
+                fontStyle: 'italic',
+                color: '#999'
+              }}
+            >
+              {this.props.value === 0 ? '' :
+                this.props.value === "" ? '(blank)' : this.props.value}
+            </span>
+          }
 
       </div>
     )
@@ -45,7 +57,7 @@ class Input extends Component {
 
   _handleChange = (e) => {
     let value = e.target.value;
-    let name  = e.target.name;
+    // let name  = e.target.name;
 
     this.setState({
       value: value,

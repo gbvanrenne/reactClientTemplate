@@ -20,7 +20,6 @@ const AsyncTypeahead = asyncContainer(Typeahead);
 class SearchBar extends Component
 {
     state = {
-      disabled: false,
       dropup: false,
       flip: false,
       highlightOnlyResult: true,
@@ -47,17 +46,17 @@ class SearchBar extends Component
     // When first loading the component, populate the search bar with
     // some customers
     var queryParams = ''
+
     if (this.state.initialState) {
       queryParams = '(first: 10)'
       this.setState({initialState: false})
     }
     
-    // var userList = await DB_Users_GET(queryParams)
-
+    var userList = await DB_Users_GET(queryParams)
 
     this.setState({
-      // options: userList,
-      options: mock_customer_data.sort(this._sortByName),
+      options: userList.sort(this._sortByName),
+      // options: mock_customer_data.sort(this._sortByName),
       isLoading: false,
     })
   }
@@ -88,6 +87,7 @@ class SearchBar extends Component
       </ul></code>
       <AsyncTypeahead 
         {...this.state}
+        disabled={! this.props.disabled}
         options={this.state.options}
         labelKey={ option => { 
           let label = option.firstName + ' ' + option.lastName + ' | ' + option.address
