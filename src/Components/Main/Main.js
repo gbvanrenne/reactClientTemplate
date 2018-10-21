@@ -4,6 +4,7 @@ import CustomerInfoForm from './CustomerInfoForm'
 import ProductRefill from './ProductRefill'
 import Button from '../Common/HTML/Button'
 import objIsEmpty from '../../Utils/objUtils' 
+import DB_User_UPDATE from '../../DBqueries/DB_User_UPDATE'
 
 class Main extends Component {
   state = {
@@ -22,10 +23,11 @@ class Main extends Component {
       balance_11L: 0,
       balance_1L: 0,
     },
-    customerEdits: {},
+    customerEdits: {}, 
+    shouldRefreshSearchList: false,
   }
 
-  _setCustomer = params => {
+  _setCustomer = params => { 
     
     var customerInfo = {}
     
@@ -48,14 +50,20 @@ class Main extends Component {
     this.setState({readOnlyMode: state})
   }
 
+  _setRefreshSearchListFlag = state => {
+    this.setState({shouldRefreshSearchList: state})
+  }
+
   render() { 
+
     return (
       <div>
-        {process.env.DB_SERVER}
 
         <SearchBar 
           setCustomer_callback={this._setCustomer.bind(this)}
           disabled={this.state.readOnlyMode}
+          refreshList={this.state.shouldRefreshSearchList}
+          setRefreshListFlag={this._setRefreshSearchListFlag.bind(this)}
         />
         
         <CustomerInfoForm
@@ -165,7 +173,7 @@ class Main extends Component {
     }))
   }
   
-  _handleButtonEvent = (e) => {
+  _handleButtonEvent = async (e) => {
     // button event handling logic
     e.preventDefault()
 
@@ -192,21 +200,28 @@ class Main extends Component {
         break;
 
       case 'saveChanges':
-        console.log(e.target.name + " button clicked")          
 
         // call API to update user information
+        let {err} = await DB_User_UPDATE({
+          id: this.state.customer.id,
+          data: this.state.customerEdits
+        })
 
         // then update customer state info, replacing values in customer 
         // object with updated values from customerEdits object
         this.setState({ 
           customer: {
-            ...this.state.customer, 
+            ...this.state.customer,
             ...this.state.customerEdits
           },
+        })
+
+        this.setState({
+          shouldRefreshSearchList: true,
           customerEdits: {},
           readOnlyMode: ! this.readOnlyMode
         })
-    
+
         break;
 
       case 'cancelChanges':

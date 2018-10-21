@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import Input from '../Common/HTML/Input'
-import objIsEmpty from '../../Utils/objUtils' 
 import './CustomerInfoForm.css'
 
 class CustomerInfoForm extends Component {

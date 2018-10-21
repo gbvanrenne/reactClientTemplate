@@ -35,6 +35,14 @@ class SearchBar extends Component
     this._handleSearch()
   }
 
+  componentDidUpdate() {
+
+    if(this.props.refreshList) {
+      this._handleSearch()
+      this.props.setRefreshListFlag(false)
+    }
+  }
+
   _getContent = selected => {
     this.props.setCustomer_callback(selected[0])
     this._typeahead.getInstance().clear()
@@ -45,14 +53,12 @@ class SearchBar extends Component
 
     // When first loading the component, populate the search bar with
     // some customers
-    var queryParams = ''
-
-    if (this.state.initialState) {
-      queryParams = '(first: 10)'
-      this.setState({initialState: false})
-    }
+    this.setState({initialState: false})
     
-    var userList = await DB_Users_GET(queryParams)
+    var userList = await DB_Users_GET({
+      first: 10, 
+      orderBy: 'lastName_ASC'
+    })
 
     this.setState({
       options: userList.sort(this._sortByName),
