@@ -21,15 +21,53 @@ class Main extends Component {
       email: "",
       balance_18L: 0,
       balance_11L: 0,
-      balance_1L: 0,
+      balance_01L: 0,
     },
-    customerEdits: {}, 
+    customerEdits: {},
+    processingEdits: false, 
     shouldRefreshSearchList: false,
   }
 
+  componentWillMount() {
+    // Balances aren't guaranteed to be set for a user, so when mounting
+    // this component, initialize the balance to 0
+    if (objIsEmpty(this.state.customer)) {
+      this.setState({
+        customer: {
+          balance_18L: 0,
+          balance_11L: 0,
+          balance_01L: 0,
+        }
+      })
+    }
+  }
+
+  componentWillUpdate() {
+    // Balances aren't guaranteed to be set for a user, so if the balances are
+    // null or blank, set them to 0
+    let balanceData = {}
+
+    if (this.state.customer.balance_18L === "") balanceData.balance_18L = 0
+    if (this.state.customer.balance_11L === "") balanceData.balance_11L = 0
+    if (this.state.customer.balance_01L === "") balanceData.balance_01L = 0
+
+    if (! objIsEmpty(balanceData)) {
+      this.setState({
+        customer: {
+          ...this.state.customer,
+          ...balanceData
+        }
+      })
+    }
+  }
   _setCustomer = params => { 
     
     var customerInfo = {}
+
+    // Clear existing customer info
+    this.setState({ 
+      customer: {}
+    })
     
     for (var key in params) {
       if (params.hasOwnProperty(key)) {
@@ -38,7 +76,13 @@ class Main extends Component {
           customerInfo[key] = params[key]
       }
     }
-    this.setState({customer: customerInfo})
+
+    this.setState( prevState => ({ 
+      customer: {
+        ...this.state.customer, 
+        ...customerInfo,
+      }
+    }))
   }
 
   _updateCustomer = params => {
@@ -66,12 +110,6 @@ class Main extends Component {
           setRefreshListFlag={this._setRefreshSearchListFlag.bind(this)}
         />
         
-        <CustomerInfoForm
-          readOnlyMode={this.state.readOnlyMode} 
-          customer={this.state.customer}
-          inputChange_cb={this._handleInputChange.bind(this)}
-        />
-
         {/* new customer button*/}
         { this.state.readOnlyMode === true &&
         <Button 
@@ -123,34 +161,46 @@ class Main extends Component {
         />
         }
 
+        <CustomerInfoForm
+          readOnlyMode={this.state.readOnlyMode} 
+          customer={this.state.customer}
+          inputChange_cb={this._handleInputChange.bind(this)}
+        />
+
+        <code><ul>
+          <li>Disable refillQty if customer isn't selected or edit mode is enabled</li>  
+          <li>Changing the balance in edit mode should trigger enabling of save / cancel</li>  
+          <li>After adding or deducting credits, refill qty field should be set to 0 or blank</li>  
+        </ul></code>
+
         <ProductRefill
           productType="18 Litre"
           readOnlyMode={this.state.readOnlyMode}
-          updateCustomer_callback={this._updateCustomer.bind(this)}
           balanceName={'balance_18L'}
           balance={this.state.customer.balance_18L}
+          balanceChange_cb={this._handleBalanceChange.bind(this)}
           customer={this.state.customer.id}
-          inputChange_cb={this._handleInputChange.bind(this)}
+          processingEdits={this.state.processingEdits}
           />
 
         <ProductRefill
           productType="11 Litre"
           readOnlyMode={this.state.readOnlyMode}
-          updateCustomer_callback={this._updateCustomer.bind(this)}
           balanceName={'balance_11L'}
           balance={this.state.customer.balance_11L}
+          balanceChange_cb={this._handleBalanceChange.bind(this)}
           customer={this.state.customer.id}
-          inputChange_cb={this._handleInputChange.bind(this)}
+          processingEdits={this.state.processingEdits}
         />
 
         <ProductRefill
           productType="1 Litre"
           readOnlyMode={this.state.readOnlyMode}
-          updateCustomer_callback={this._updateCustomer.bind(this)}
-          balanceName={'balance_1L'}
-          balance={this.state.customer.balance_1L}
+          balanceName={'balance_01L'}
+          balance={this.state.customer.balance_01L}
+          balanceChange_cb={this._handleBalanceChange.bind(this)}
           customer={this.state.customer.id}
-          inputChange_cb={this._handleInputChange.bind(this)}
+          processingEdits={this.state.processingEdits}
         />
 
       </div>
@@ -159,6 +209,20 @@ class Main extends Component {
 
   _recordHasUnsavedEdits = () => {
     return (! objIsEmpty(this.state.customerEdits))
+  }
+
+  _handleBalanceChange = async (args) => {
+    // Called as a callback from ProductRefill after a new balance value has been 
+    // calculated and applied by clicking the Apply button. Receives the appropriate 
+    // balance field for the customer record as well as the balance value for that 
+    // field.
+    let name = args.name
+    let value = args.value
+    let dataUpdate = {
+      [name]: value
+    }
+
+    let rc = await this._pushEditsToDB(dataUpdate)
   }
 
   _handleInputChange = (e) => {
@@ -179,16 +243,21 @@ class Main extends Component {
 
     switch (e.target.name) {
 
+      // -------------------------------------
       case 'newCustomer':
-        console.log(e.target.name + " button clicked")          
+      // -------------------------------------
+      console.log(e.target.name + " button clicked")          
         break;
 
+      // -------------------------------------
       case 'deleteCustomer':
-        console.log(e.target.name + " button clicked")          
+      // -------------------------------------
+      console.log(e.target.name + " button clicked")          
         break;
 
+      // -------------------------------------
       case 'editCustomer':
-
+      // -------------------------------------
         if(this.state.customer.id) {
           this.setState({
             readOnlyMode: ! this.state.readOnlyMode,
@@ -199,32 +268,17 @@ class Main extends Component {
         }
         break;
 
+      // -------------------------------------
       case 'saveChanges':
-
+      // -------------------------------------
         // call API to update user information
-        let {err} = await DB_User_UPDATE({
-          id: this.state.customer.id,
-          data: this.state.customerEdits
-        })
-
-        // then update customer state info, replacing values in customer 
-        // object with updated values from customerEdits object
-        this.setState({ 
-          customer: {
-            ...this.state.customer,
-            ...this.state.customerEdits
-          },
-        })
-
-        this.setState({
-          shouldRefreshSearchList: true,
-          customerEdits: {},
-          readOnlyMode: ! this.readOnlyMode
-        })
+        await this._pushEditsToDB()
 
         break;
 
+      // -------------------------------------
       case 'cancelChanges':
+      // -------------------------------------
         // reset customer edit state variable to an empty object
         this.setState({
           customerEdits: {},
@@ -255,14 +309,33 @@ class Main extends Component {
       )
   }
 
-  _handleFormSubmit = () => {
-    // form submission logic
-    console.log("_handleFormSubmit")
-  }
+  _pushEditsToDB = async (args) => {
+    // call API to update user information
+    let rc = ''
+    
+    let editData = (objIsEmpty(args)) ? this.state.customerEdits : args
 
-  _handleFormClear = () => {
-    // form reset logic
-    console.log("_handleFormClear")
+    rc = await DB_User_UPDATE({
+      id: this.state.customer.id,
+      data: editData,
+    })
+
+    // then update customer state info, replacing values in customer 
+    // object with updated values from customerEdits object
+    this.setState( prevState => ({ 
+      customer: {
+        ...prevState.customer,
+        ...editData
+      },
+    }))
+
+    this.setState({
+      shouldRefreshSearchList: true,
+      customerEdits: {},
+      readOnlyMode: ! this.readOnlyMode
+    })    
+
+    return(rc)
   }
 
 }

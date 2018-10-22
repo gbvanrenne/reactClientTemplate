@@ -10,6 +10,9 @@ function DB_User_UPDATE (params) {
         id
         firstName
         lastName
+        balance_18L
+        balance_11L
+        balance_01L
       }
     }
   `
@@ -31,25 +34,9 @@ function DB_User_UPDATE (params) {
     return ( {err: null, rc: result.data.data.updateUser} ) 
   })
   .catch(error => {
-    alert(error)
     console.log(error)
+    return (error)
   })
-
-
-  // return axios.post(process.env.REACT_APP_DB_SERVER,
-  //   { 
-  //     query: print(UPDATE_USER),
-  //     variables: {
-  //       id: params.id,
-  //       data: {firstName: "George"}}
-  //   }
-  // )
-  // .then( result => {
-  //   return {err: null, rc: result.data.data.updateUser}
-  // })
-  // .catch( e => {
-  //   console.log(e)
-  // })
 }
 
 export default DB_User_UPDATE

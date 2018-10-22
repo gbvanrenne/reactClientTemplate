@@ -17,6 +17,9 @@ function DB_Users_GET (params) {
         postalCode
         phone
         email
+        balance_18L
+        balance_11L
+        balance_01L
       }
     }
   `

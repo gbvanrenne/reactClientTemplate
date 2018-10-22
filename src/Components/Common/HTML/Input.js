@@ -10,7 +10,7 @@ class Input extends Component {
     // use the props value when in read-only mode or when updating refill qty which 
     // is enabled in read-only mode
 
-    if (this.props.disabled || this.props.name === 'refillQty') {
+    if (this.props.disabled || this.props.parentClass === 'ProductRefill') {
 
       if (this.state.value !== this.props.value) {
         this.setState({
@@ -43,7 +43,7 @@ class Input extends Component {
             <span style={{
                 paddingLeft: '10px',
                 fontStyle: 'italic',
-                color: '#999'
+                color: '#999',
               }}
             >
               {this.props.value === 0 ? '' :

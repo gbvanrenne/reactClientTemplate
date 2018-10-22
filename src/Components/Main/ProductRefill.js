@@ -18,7 +18,6 @@ class ProductRefill extends Component {
   }
 
   componentWillMount = () => {
-
     if (this.state.balance === 0) {
       this.setState({
         actionOptionsIndex: 1,
@@ -26,11 +25,10 @@ class ProductRefill extends Component {
       })
     }
 
-    this.setState({ balance: this.props.balance })
+    this.setState({ balance: this.props.balance || 0})
   }
-    
-  componentDidUpdate = () => {
 
+  componentDidUpdate = () => {
     if (this.state.balance === 0 && this.state.actionOption === 'DEDUCT (-)') {
       this.setState( prevState => {
         return ({
@@ -39,6 +37,10 @@ class ProductRefill extends Component {
           actionOption: 'ADD (+)',
         })
       })
+    }
+
+    if (this.state.balance !== this.props.balance) {
+      this.setState({ balance: this.props.balance })
     }
   }
 
@@ -68,15 +70,9 @@ class ProductRefill extends Component {
             inputLabel    ={'Balance'} 
             name          ={'balance'} 
             balanceType   ={this.props.balanceName} 
-            value         ={this.state.balance}
+            value         ={this.state.balance || 0}
             handleChange_callback  ={this._handleNumberInput.bind(this)}
           /> 
-
-          <code><ul>
-            <li>disable refillQty if customer isn't selected or edit mode is enabled</li>  
-            <li>Changing the balance in edit mode should trigger enabling of save / cancel</li>  
-            <li>After adding or deducting credits, refill qty field should be set to 0</li>  
-          </ul></code>
 
           {/* deduct / add quantity */}
           <Input 
@@ -96,12 +92,17 @@ class ProductRefill extends Component {
           />
 
           {/* apply / submit button */}
+
+          {this.props.readOnlyMode &&
           <Button 
+            disabled      ={! this.props.readOnlyMode}
             parentClass   ={'ProductRefill'}
             name          ={'applyChange'}
             title         ={'Apply'}
             action        ={this._handleButtonEvent}
           />
+          }
+          
           <p></p>
 
           <code>Recent transactions</code><br />
@@ -126,22 +127,15 @@ class ProductRefill extends Component {
       })
   }
 
-  _handleInput = (e) => {
-    let value = e.target.value;
-    let name  = e.target.name;
-    
-    this.setState({
-          [name]: value
-      })
-  }
-
   _handleButtonEvent = (e) => {
     // button event handling logic
     e.preventDefault()
 
     switch (e.target.name) {
 
+      // ------------------------------------
       case 'refillType':
+      // ------------------------------------
 
         if (! this.props.readOnlyMode) break; 
 
@@ -161,30 +155,40 @@ class ProductRefill extends Component {
           
         break;
 
+      // ------------------------------------
       case 'applyChange':
-        // Assume you're adding credits by default
-        var multiplier = 1
-        
-        // Change the multiplier to -1 if the action is a refill
-        if (this.state.actionOptionsIndex === 0) {
-          multiplier = -1
-        }
+      // ------------------------------------
 
-        // increase or decrease balance
-        const newBalance = parseInt(this.state.balance) + (multiplier * parseInt(this.state.refillQty))
+        if (this.props.readOnlyMode) {
+          // Assume you're adding credits by default
+          var multiplier = 1
+          
+          // Change the multiplier to -1 if the action is a refill
+          if (this.state.actionOptionsIndex === 0) {
+            multiplier = -1
+          }
 
-        // Adjust the new balance up or down based on the specified refill qty
-        // If deducting credits, disallow operation if it would result in less
-        // than 0 credits left on the account.
+          // increase or decrease balance
+          const newBalance = parseInt(this.state.balance) + (multiplier * parseInt(this.state.refillQty))
 
-        if (newBalance >= 0) {
-          this.setState({
-            refillQty: 0,
-            balance: parseInt(newBalance)
-          })
-        }
-        else {
-          alert("Insufficient credits.")
+          // Adjust the new balance up or down based on the specified refill qty
+          // If deducting credits, disallow operation if it would result in less
+          // than 0 credits left on the account.
+
+          if (newBalance >= 0) {
+            this.setState({
+              refillQty: 0,
+              balance: parseInt(newBalance)
+            })
+
+            this.props.balanceChange_cb({
+              value: newBalance,
+              name: this.props.balanceName, 
+            })
+          }
+          else {
+            alert("Insufficient credits.")
+          }
         }
 
         break;
